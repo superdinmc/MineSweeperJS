@@ -13,6 +13,10 @@ canvas.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   flag(Math.floor(e.offsetX / tileSize), Math.floor(e.offsetY / tileSize));
 });
+canvas.addEventListener("pointermove", (e) => {
+  document.getElementById("coord").textContent =
+    `${(x = Math.floor(e.offsetX / tileSize))}, ${(y = Math.floor(e.offsetY / tileSize))} ${JSON.stringify(data[x][y])}`;
+});
 const ctx = canvas.getContext("2d");
 const palette = {
   "0-0": "#44EE44",
@@ -25,13 +29,7 @@ const flagpng = new Image();
 flagpng.src = "flag.png";
 
 generate();
-while (
-  !reveal(
-    Math.floor(Math.random() * tileLength),
-    Math.floor(Math.random() * tileLength),
-  )
-);
-//render();
+firstOpen();
 // Add a rectangle at (10, 10) with size 100x100 pixels
 //ctx.fillRect(10, 10, 100, 100);
 function render() {
@@ -42,7 +40,7 @@ function render() {
   for (let x = 0; x < tileLength; x++) {
     for (let y = 0; y < tileLength; y++) {
       const d = data[x][y];
-      const datp = d.p + d.r + d.f;
+      const datp = !!d.p + "," + !!d.r + "," + !!d.f;
       if (d.p === datp) return;
       d.p = datp;
       const colorId = (Math.floor((x + (y % 2)) % 2) === 0) * 1 + "-" + d.r * 1;
@@ -73,9 +71,37 @@ function flag(x, y) {
   render();
 }
 
-function reveal(x, y) {
+function reveal(x, y, top = true) {
+  const d = data[x][y];
+  if (d.r || d.f) return false;
+  if (d.b) {
+    log("BOOM!");
+    alert("BOOM!");
+    return (
+      (location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0") && false
+    );
+  }
+  data[x][y].r = true;
+  if (d.c === 0) iterateNeighbors(x, y, (x, y) => reveal(x, y, false));
+  log(`reveal ${x}, ${y}`);
+  if (top) render();
   return true;
 }
+//minimal-function to find the best tile to open
+function firstOpen() {
+  while (true) {
+    const x = Math.floor(Math.random() * tileLength);
+    const y = Math.floor(Math.random() * tileLength);
+    const d = data[x][y];
+    if (!d.r && !d.b && !d.c) {
+      reveal(x, y);
+      break;
+    }
+  }
+  log(`Loaded.`);
+  return true;
+}
+//Functions below are mis-implemented, but later it will be used in AI implementation.
 /*function reveal(x, y, top = true) {
   if (!checkIfCanReveal(x, y)) return false;
   data[x][y].r = true;

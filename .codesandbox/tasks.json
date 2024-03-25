@@ -1,0 +1,25 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "n",
+      "command": "npm i -g pnpm@latest"
+    },
+    {
+      "name": "p",
+      "command": "pnpm i -D parcel"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "p": {
+      "name": "p",
+      "command": "pnpm parcel index.html script.js flag.png",
+      "runAtStart": true,
+      "preview": {
+        "port": 1234
+      }
+    }
+  }
+}

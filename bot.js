@@ -7,9 +7,6 @@ import { log, reveal } from "./script.js";
  * @param {(String)=>void} log Logging function
  * @param {(x: Number, y: Number)=>Boolean} reveal Function to reveal a tile at x,y
  */
-function bot(data) {
-  log(JSON.stringify(data[25][26]));
-  reveal(25, 26);
-}
+function bot(data) {}
 
 export default bot;

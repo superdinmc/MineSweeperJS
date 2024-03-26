@@ -15,7 +15,7 @@ canvas.addEventListener("contextmenu", (e) => {
 });
 canvas.addEventListener("pointermove", (e) => {
   document.getElementById("coord").textContent =
-    `${(x = Math.floor(e.offsetX / tileSize))}, ${(y = Math.floor(e.offsetY / tileSize))} ${JSON.stringify(data[x][y])}`;
+    `${(x = Math.floor(e.offsetX / tileSize))}, ${(y = Math.floor(e.offsetY / tileSize))}`;
 });
 const ctx = canvas.getContext("2d");
 const palette = {
@@ -41,7 +41,7 @@ function render() {
     for (let y = 0; y < tileLength; y++) {
       const d = data[x][y];
       const datp = !!d.p + "," + !!d.r + "," + !!d.f;
-      if (d.p === datp) return;
+      if (d.p === datp) continue;
       d.p = datp;
       const colorId = (Math.floor((x + (y % 2)) % 2) === 0) * 1 + "-" + d.r * 1;
       //log(colorId);

@@ -9,7 +9,7 @@ const tileSize = 20,
 var logs = ["Log will be printed here"];
 const logElement = document.getElementById("log");
 const canvas = document.querySelector("canvas");
-import bot from "./bot";
+import bot from "./bot.js";
 canvas.height = tileSize * tileLength;
 canvas.width = canvas.height;
 window.addEventListener("error", (e) => log(e.error));

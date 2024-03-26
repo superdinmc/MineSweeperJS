@@ -1,6 +1,6 @@
 //Bot system for it, not done yet
 
-import { log, reveal } from "./script";
+import { log, reveal } from "./script.js";
 
 /**
  * @param {{r:Boolean,f:Boolean,c:Number,f:Boolean,p:String}[][]} data Data of the field, without unrevealed tiles.

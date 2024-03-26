@@ -7,7 +7,7 @@
     },
     {
       "name": "p",
-      "command": "pnpm i -D parcel"
+      "command": "pnpm i -D vite"
     }
   ],
 
@@ -15,10 +15,10 @@
   "tasks": {
     "p": {
       "name": "p",
-      "command": "pnpm parcel index.html script.js flag.png",
+      "command": "pnpm vite",
       "runAtStart": true,
       "preview": {
-        "port": 1234
+        "port": 5173
       }
     }
   }

@@ -1,10 +1,17 @@
-const tileSize = 20,
-  tileLength = 20,
-  bombCount = 100;
+let tileLength = 0,
+  arg = parseInt(new URLSearchParams(location.search).get("length"));
+if (arg && !Number.isNaN(arg)) tileLength = arg;
 
+while (tileLength < 5)
+  tileLength = parseInt(prompt("Enter grid length (Minimum is 5)"));
+const tileSize = 20,
+  bombCount = tileLength ** 2 / 4;
 var logs = ["Log will be printed here"];
 const logElement = document.getElementById("log");
 const canvas = document.querySelector("canvas");
+import bot from "./bot";
+canvas.height = tileSize * tileLength;
+canvas.width = canvas.height;
 window.addEventListener("error", (e) => log(e.error));
 canvas.addEventListener("click", (e) => {
   reveal(Math.floor(e.offsetX / tileSize), Math.floor(e.offsetY / tileSize));
@@ -14,8 +21,9 @@ canvas.addEventListener("contextmenu", (e) => {
   flag(Math.floor(e.offsetX / tileSize), Math.floor(e.offsetY / tileSize));
 });
 canvas.addEventListener("pointermove", (e) => {
-  document.getElementById("coord").textContent =
-    `${(x = Math.floor(e.offsetX / tileSize))}, ${(y = Math.floor(e.offsetY / tileSize))}`;
+  const x = Math.floor(e.offsetX / tileSize),
+    y = Math.floor(e.offsetY / tileSize);
+  document.getElementById("coord").textContent = `${x}, ${y}`;
 });
 const ctx = canvas.getContext("2d");
 const palette = {
@@ -23,6 +31,11 @@ const palette = {
   "1-0": "#55FF55",
   "0-1": "#F8D257",
   "1-1": "#FFE388",
+  t2: "#1500BF",
+  t3: "#DD0000",
+  t4: "#A0002E",
+  t5: "#FF0000",
+  t6: "#870057",
 };
 var data = [];
 const flagpng = new Image();
@@ -30,13 +43,14 @@ flagpng.src = "flag.png";
 
 generate();
 firstOpen();
+startTick();
 // Add a rectangle at (10, 10) with size 100x100 pixels
 //ctx.fillRect(10, 10, 100, 100);
 function render() {
   const start = Date.now();
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = tileSize + "px serif";
+  ctx.font = "bolder " + tileSize + "px arial";
   for (let x = 0; x < tileLength; x++) {
     for (let y = 0; y < tileLength; y++) {
       const d = data[x][y];
@@ -48,7 +62,7 @@ function render() {
       ctx.fillStyle = palette[colorId];
       ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
       if (d.r && d.c !== 0) {
-        ctx.fillStyle = "black";
+        ctx.fillStyle = palette["t" + d.c] || "black";
         ctx.fillText(`${d.c}`, (x + 0.5) * tileSize, (y + 0.5) * tileSize);
       } else if (d.f) {
         ctx.drawImage(
@@ -77,9 +91,9 @@ function reveal(x, y, top = true) {
   if (d.b) {
     log("BOOM!");
     alert("BOOM!");
-    return (
-      (location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0") && false
-    );
+    generate();
+    firstOpen();
+    return;
   }
   data[x][y].r = true;
   if (d.c === 0) iterateNeighbors(x, y, (x, y) => reveal(x, y, false));
@@ -166,4 +180,17 @@ function log(msg) {
   if (logs.length > 50) logs.pop();
   logs.unshift(msg);
   logElement.innerHTML = logs.join("<br>");
+}
+
+export { log, reveal };
+//bot-related functions
+function startTick() {
+  bot(
+    data.map((e) =>
+      e.map((e) => (e.r === true ? { ...e, h: false } : { h: true })),
+    ),
+    log,
+    reveal,
+  );
+  setTimeout(startTick, 100);
 }

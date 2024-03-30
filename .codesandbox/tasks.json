@@ -7,7 +7,7 @@
     },
     {
       "name": "p",
-      "command": "pnpm i -D vite"
+      "command": "pnpm prune"
     }
   ],
 
@@ -15,10 +15,10 @@
   "tasks": {
     "p": {
       "name": "p",
-      "command": "pnpm vite",
+      "command": "node mginx 8000",
       "runAtStart": true,
       "preview": {
-        "port": 5173
+        "port": 8000
       }
     }
   }

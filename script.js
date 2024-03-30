@@ -2,7 +2,7 @@ let tileLength = 0,
   arg = parseInt(new URLSearchParams(location.search).get("length"));
 if (arg && !Number.isNaN(arg)) tileLength = arg;
 
-while (tileLength < 5)
+while (tileLength < 5 || Number.isNaN(tileLength))
   tileLength = parseInt(prompt("Enter grid length (Minimum is 5)"));
 const tileSize = 20,
   bombCount = tileLength ** 2 / 4;
@@ -37,7 +37,7 @@ const palette = {
   t5: "#FF0000",
   t6: "#870057",
 };
-var data = [];
+const data = [];
 const flagpng = new Image();
 flagpng.src = "flag.png";
 
@@ -182,15 +182,13 @@ function log(msg) {
   logElement.innerHTML = logs.join("<br>");
 }
 
-export { log, reveal };
+//Library for bot
+export { log, reveal, iterateNeighbors };
 //bot-related functions
 function startTick() {
-  bot(
-    data.map((e) =>
-      e.map((e) => (e.r === true ? { ...e, h: false } : { h: true })),
-    ),
-    log,
-    reveal,
+  window.data = data.map((e) =>
+    e.map((e) => (e.r ? { ...e, h: false } : e.f ? { f: true } : { h: true })),
   );
-  setTimeout(startTick, 100);
+  bot(window.data, log, reveal);
+  setTimeout(startTick, 1000);
 }

@@ -3,7 +3,7 @@
 import { log, reveal, iterateNeighbors } from "./script.js";
 
 /**
- * @param {{r:Boolean,f:Boolean,c:Number,f:Boolean,p:String}[][]} data Data of the field, without unrevealed tiles.
+ * @param {{r:Boolean,f:Boolean,c:Number,f:Boolean,p:String,h:false}[][]|{h:true}[][]} data Data of the field, without unrevealed tiles.
  * @param {(String)=>void} log Logging function
  * @param {(x: Number, y: Number)=>Boolean} reveal Function to reveal a tile at x,y
  */

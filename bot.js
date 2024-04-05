@@ -7,31 +7,35 @@ const flag = putFlag;
  * @param {{r:Boolean,f:Boolean,c:Number,f:Boolean,p:String,h:Boolean}[][]} map Data of the field, without unrevealed tiles.
  */
 function bot(map) {
-	map.forEach((column, x) =>
-		column.forEach((tile, y) => {
-			if (tile.h) return;
-			if (tile.c === 0) return;
-			let count = 0,
-				remaining = 0;
-			iterateNeighbors(
-				x,
-				y,
-				(x, y) =>
-					((count += map[x][y].f) || 1) &&
-					(remaining += !map[x][y].f && !map[x][y].r)
-			);
-			const score = tile.c - count;
-			//console.log(x, y, count, score, remaining);
-			map[x][y].fc = count;
-			if (score === 0) {
-				iterateNeighbors(x, y, (x, y) => open(x, y));
-			} else {
-				if (score === remaining) {
-					iterateNeighbors(x, y, (x, y) => map[x][y].f || flag(x, y));
+  try {
+		map.forEach((column, x) =>
+			column.forEach((tile, y) => {
+				if (tile.h) return;
+				if (tile.c === 0) return;
+				let count = 0,
+					remaining = 0;
+				iterateNeighbors(
+					x,
+					y,
+					(x, y) =>
+						((count += map[x][y].f) || 1) &&
+						(remaining += !map[x][y].f && !map[x][y].r)
+				);
+				const score = tile.c - count;
+				//console.log(x, y, count, score, remaining);
+				map[x][y].fc = count;
+				if (score === 0) {
+					iterateNeighbors(x, y, (x, y) => open(x, y));
+				} else {
+					if (score === remaining) {
+						iterateNeighbors(x, y, (x, y) => map[x][y].f || flag(x, y));
+					}
 				}
-			}
-		})
-	);
+			})
+		);
+	} catch (e) {
+		log(e.message);
+	}
 	//console.log(map);
 }
 

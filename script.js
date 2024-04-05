@@ -128,7 +128,7 @@ function open(x, y, top = true) {
 	if (d.b) {
 		generate();
 		firstOpen();
-		return;
+		throw new Error("dead");
 	}
 	data[x][y].r = true;
 	if (d.c === 0) iterateNeighbors(x, y, (x, y) => reveal(x, y, false));
